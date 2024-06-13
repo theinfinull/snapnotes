@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes</title>
     <link rel="stylesheet" href="main.css" />
-    <script src="main.js" defer></script>
+    <script src="popup.js" defer></script>
+    <script src="notesCard.js" defer></script>
     <script src="cardmaker.js" defer></script>
   </head>
   <body>
-    <h1 class="h1">Notes v1.0.1</h1>
+    <h1 class="h1">SnapNotes v1.0.1</h1>
     <div class="card-maker">
       <button class="btn btn--new" data-color="white">+</button
       ><button class="btn btn--yellow" data-color="yellow"></button
@@ -18,15 +19,8 @@
       ><button class="btn btn--pink" data-color="pink"></button>
     </div>
     <div class="cards-fixed">
-      <div class="cards-absolute">
-        <div class="card card--notes" data-color="yellow">
-          <div class="card__top"></div>
-          <button class="card__delete-btn">
-            <img class="card__delete-img" src="img/delete.png" />
-          </button>
-          <textarea class="card__content"></textarea>
-        </div>
-      </div>
+      <div class="cards-absolute"></div>
     </div>
+    <div class="popupcontainer"></div>
   </body>
 </html>

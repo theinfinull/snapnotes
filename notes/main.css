@@ -1,30 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap');
+
+:root {
+    --clr-white: hsl(0, 0%, 100%);
+    --clr-white-contrast: hsl(0, 0%, 85%);
+    --clr-yellow: hsl(51, 100%, 85%);
+    --clr-yellow-contrast: hsl(51, 100%, 75%);
+    --clr-green: hsl(102, 45%, 74%);
+    --clr-green-contrast: hsl(102, 45%, 64%);
+    --clr-blue: hsl(190, 44%, 71%);
+    --clr-blue-contrast: hsl(190, 44%, 61%);
+    --clr-pink: hsl(300, 45%, 82%);
+    --clr-pink-contrast: hsl(300, 45%, 72%);
+
+    /* card */
+    /* --clr-card: var(--clr-white);
+    --clr-card-contrast: var(--clr-white-contrast); */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body {
+    /* font */
+    font-family: 'Gochi Hand', cursive;
+    color: white;
+    /* background */
     background-color: #2b2b2b;
+    background-size: 30px 30px;
+  background-image:
+    linear-gradient(to right, #ffffff11 1px, transparent 1px),
+    linear-gradient(to bottom, #ffffff11 1px, transparent 1px);
 }
 
-.container {
-    border: 2px dashed #ffffff88;
-    height: 500px;
-    width: 500px;
-    margin: 0 auto;
-    position: relative;
-    border-radius: .25rem;
+
+.h1 {
+    text-align: center;
+    margin-top: 1rem;
+    user-select: none;
 }
 
+.cards-fixed {
+    position: fixed;
+    top: 3.75rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff11;
+    z-index: 1;
+}
+
+/* ------- card  ------- */ 
 .card {
+    --clr-card: var(--clr-white);
+    --clr-card-contrast: var(--clr-white-contrast);
     position: absolute;
-    height: 100px;
-    width: 100px;
-    border: 2px dashed #ffffff88;
-    background-color: lightgreen;
     border-radius: .25rem;
+    background-color: var(--clr-card);
+    height: 18ch;
+    width: 36ch;
+    color: black;
+    box-shadow: 0 0 1rem #00000044;
     cursor: pointer;
     transition: 0.2s box-shadow, 0.2s scale;
 }
 
+.card__top {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 1.75rem;
+    background-color: var(--clr-card-contrast);
+    border-radius: .25rem .25rem 0 0;
+    /* gradient - in testing */
+    /* background-image: linear-gradient(to right, var(--clr-yellow), var(--clr-green), var(--clr-blue), var(--clr-pink)); */
+}
+
+.card[data-color="yellow"] {
+    --clr-card: var(--clr-yellow);
+    --clr-card-contrast: var(--clr-yellow-contrast);
+}
+
+.card[data-color="green"] {
+    --clr-card: var(--clr-green);
+    --clr-card-contrast: var(--clr-green-contrast);
+}
+
+.card[data-color="blue"] {
+    --clr-card: var(--clr-blue);
+    --clr-card-contrast: var(--clr-blue-contrast);
+}
+
+.card[data-color="pink"] {
+    --clr-card: var(--clr-pink);
+    --clr-card-contrast: var(--clr-pink-contrast);
+}
+
+.card__delete-btn {
+    display: flex;
+    opacity: 0.8;
+    position: absolute;
+    top: .25rem;
+    right: .75rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    user-select: none;
+}
+
+.card__delete-img {
+    height: 1.25rem;
+}
+
+/* text input area */
+.card__content {
+    font-family: 'Gochi Hand', cursive;
+    font-size: 1.125rem;
+    margin: 1rem;
+    margin-top: 2.5rem;
+    width: 90%;
+    height: 65%;
+    background-color: transparent;
+    border: none;
+    resize: none;
+
+    /* scrollbar */
+    &::-webkit-scrollbar {
+        width: .25rem;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #00000011;
+        border-radius: .5rem;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+/* card animations */
 .card[data-dragging="true"] {
     scale: 1.05;
     box-shadow: 0 0 1rem black;
     cursor: grabbing;
+}
+
+/* card maker */
+.card-maker {
+    /* flex */
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+    align-items: center;
+    /* pos */
+    position: fixed;
+    top: 50%;
+    left: 1rem;
+    translate: 0 -50%;
+    z-index: 100;
+    /* other */
+    padding: 1rem .75rem;
+    border-radius: 2rem;
+    background-color: #444444;
+    margin-top: 1rem;
+    box-shadow: 0 0 1rem #00000044;
+}
+
+.btn {
+    height: 2rem;
+    width:2rem;
+    border-radius: 2rem;
+    border: none;
+    transition: background-color 0.2s ease-in-out, scale 0.2s ease-in-out;
+    box-sizing: content-box;
+    user-select: none;
+
+    &:hover {
+        scale: 1.1;
+        cursor: pointer;
+    }
+}
+
+.btn--new {
+    font-size: 1.5rem;
+    color: white;
+    background-color: #ffffff66;
+
+    &:hover {
+        background-color: #ffffff77;
+    }
+}
+
+.btn--yellow {
+    background-color: var(--clr-yellow);
+    &:hover {
+        background-color: var(--clr-yellow-contrast);
+    }
+}
+
+.btn--green {   
+    background-color: var(--clr-green);
+    &:hover {
+        background-color: var(--clr-green-contrast);
+    }
+}
+
+.btn--blue {
+    background-color: var(--clr-blue);
+    &:hover {
+        background-color: var(--clr-blue-contrast);
+    }
+}
+
+.btn--pink {
+    background-color: var(--clr-pink);
+    &:hover {
+        background-color: var(--clr-pink-contrast);
+    }
 }

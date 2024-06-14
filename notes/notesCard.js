@@ -154,13 +154,14 @@ class NotesCard {
       document.addEventListener("mouseup", mouseUp);
 
       // for devices with touch
-      document.addEventListener("touchmove", mouseMove);
+      document.addEventListener("touchmove", mouseMove, { passive: false });
       document.addEventListener("touchend", mouseUp);
     }
 
     function mouseMove(e) {
       if (e.type === "touchmove") {
         // for devices with touch
+        e.preventDefault();
         newX = startX - e.targetTouches[0].clientX;
         newY = startY - e.targetTouches[0].clientY;
         startX = e.targetTouches[0].clientX;
@@ -177,13 +178,15 @@ class NotesCard {
       // here it's 10px
       if (card.offsetTop - newY < 10 || card.offsetLeft - newX < 10) {
         return;
-      } else if (
-        card.offsetTop - newY >
-          visualViewport.height - card.offsetHeight - 10 ||
-        card.offsetLeft - newX > visualViewport.width - card.offsetWidth - 10
-      ) {
-        return;
       }
+      // removed right and bottom boundary due to compatibility issue
+      // else if (
+      //   card.offsetTop - newY >
+      //     visualViewport.height - card.offsetHeight - 10 ||
+      //   card.offsetLeft - newX > visualViewport.width - card.offsetWidth - 10
+      // ) {
+      //   return;
+      // }
       // console.log({ newX, newY });
       card.style.top = card.offsetTop - newY + "px";
       card.style.left = card.offsetLeft - newX + "px";
@@ -196,7 +199,7 @@ class NotesCard {
       card.dataset.dragging = "false";
       document.removeEventListener("mousemove", mouseMove);
       document.removeEventListener("mouseup", mouseUp);
-      document.removeEventListener("touchmove", mouseMove);
+      document.removeEventListener("touchmove", mouseMove, { passive: false });
       document.removeEventListener("touchend", mouseUp);
       // console.log(notesCardObj);
       notesCardObj.saveToLocal(notesCardObj);

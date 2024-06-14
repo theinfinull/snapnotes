@@ -1,17 +1,21 @@
+// cards storage for local backup
 let cardsSave = JSON.parse(localStorage.getItem("cards-save")) || [];
 console.log("Total-cards: ", cardsSave.length);
-if (cardsSave.length == 0) {
+// welcome message
+if (cardsSave.length === 0) {
+  console.log(cardsSave);
   makePopup("info", "Welcome to Snap Notes!");
 } else {
   makePopup("info", "Hey welcome back!");
 }
+// card container in html
 const cardContainer = document.querySelector(".cards-absolute");
 
-// for z-index
+// for z-index of cards
 zindex = 0;
-
 class NotesCard {
   constructor(id, content, color, top, left) {
+    // if id passed just take it else create one
     this.id = id || `note-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     this.content = content;
     this.color = color;
@@ -59,10 +63,10 @@ class NotesCard {
     card.dataset.color = this.color;
     card.appendChild(top);
     card.appendChild(textarea);
-    this.makeDraggable(card);
+    this.card = card;
+    this.makeDraggable();
     card.style.top = this.top + "px";
     card.style.left = this.left + "px";
-    this.card = card;
     // console.log(this);
     return card;
   }
@@ -76,6 +80,7 @@ class NotesCard {
   }
 
   deleteCard(e) {
+    // u can't delete using this bcoz it is not in dom.. so use parentNode
     console.log(e.target.parentNode.parentNode.parentNode);
     e.target.parentNode.parentNode.parentNode.setAttribute(
       "data-deleted",
@@ -89,6 +94,7 @@ class NotesCard {
   }
 
   copyCard() {
+    // u don't have to look in dom, u have content in notesCard
     navigator.clipboard.writeText(this.content);
     makePopup("success", "Copied to clipboard");
   }
@@ -113,56 +119,87 @@ class NotesCard {
     });
   }
 
-  makeDraggable(card_e) {
-    const currNotesCard = this;
+  makeDraggable() {
+    const notesCardObj = this;
+    const card = notesCardObj.card;
     let startX = 0,
       startY = 0,
       newX = 0,
       newY = 0;
-    card_e.querySelector(".card__top").addEventListener("mousedown", mouseDown);
+    // for devices with pointer
+    card.querySelector(".card__top").addEventListener("mousedown", mouseDown);
+    // for devices with touch
+    card.querySelector(".card__top").addEventListener("touchstart", mouseDown);
 
     function mouseDown(e) {
-      // console.log(e.target.classList.contains("card__top"));
       if (!e.target.classList.contains("card__top")) {
+        // to avoid dragging for copy or delete button presses
         return;
       }
-      card_e.style.zIndex = ++zindex;
+      card.style.zIndex = ++zindex;
       console.log(zindex);
-      startX = e.clientX;
-      startY = e.clientY;
-      console.log({ startX, startY });
-      card_e.dataset.dragging = "true";
+      if (e.type === "touchstart") {
+        // for devices with touch
+        startX = e.targetTouches[0].clientX;
+        startY = e.targetTouches[0].clientY;
+      } else {
+        // for devices with pointer
+        startX = e.clientX;
+        startY = e.clientY;
+      }
+      // console.log(startX, startY);
+      card.dataset.dragging = "true";
+      // for devices with pointer
       document.addEventListener("mousemove", mouseMove);
       document.addEventListener("mouseup", mouseUp);
+
+      // for devices with touch
+      document.addEventListener("touchmove", mouseMove);
+      document.addEventListener("touchend", mouseUp);
     }
 
     function mouseMove(e) {
-      newX = startX - e.clientX;
-      newY = startY - e.clientY;
-      startX = e.clientX;
-      startY = e.clientY;
-      if (card_e.offsetTop - newY < 10 || card_e.offsetLeft - newX < 10) {
+      if (e.type === "touchmove") {
+        // for devices with touch
+        newX = startX - e.targetTouches[0].clientX;
+        newY = startY - e.targetTouches[0].clientY;
+        startX = e.targetTouches[0].clientX;
+        startY = e.targetTouches[0].clientY;
+      } else {
+        // for devices with pointer
+        newX = startX - e.clientX;
+        newY = startY - e.clientY;
+        startX = e.clientX;
+        startY = e.clientY;
+      }
+      // set a padding because the card has an animation to scale
+      // it's better to set a padding distance
+      // here it's 10px
+      if (card.offsetTop - newY < 10 || card.offsetLeft - newX < 10) {
         return;
       } else if (
-        card_e.offsetTop - newY >
-          visualViewport.height - card_e.offsetHeight - 10 ||
-        card_e.offsetLeft - newX >
-          visualViewport.width - card_e.offsetWidth - 10
+        card.offsetTop - newY >
+          visualViewport.height - card.offsetHeight - 10 ||
+        card.offsetLeft - newX > visualViewport.width - card.offsetWidth - 10
       ) {
         return;
       }
-      card_e.style.top = card_e.offsetTop - newY + "px";
-      card_e.style.left = card_e.offsetLeft - newX + "px";
+      // console.log({ newX, newY });
+      card.style.top = card.offsetTop - newY + "px";
+      card.style.left = card.offsetLeft - newX + "px";
     }
 
     function mouseUp() {
-      currNotesCard.top = card_e.offsetTop;
-      currNotesCard.left = card_e.offsetLeft;
-      card_e.dataset.dragging = "false";
+      notesCardObj.top = card.offsetTop;
+      notesCardObj.left = card.offsetLeft;
+      console.log({ top: card.offsetTop, left: card.offsetLeft });
+      card.dataset.dragging = "false";
       document.removeEventListener("mousemove", mouseMove);
       document.removeEventListener("mouseup", mouseUp);
-      console.log(currNotesCard);
-      currNotesCard.saveToLocal(currNotesCard);
+      document.removeEventListener("touchmove", mouseMove);
+      document.removeEventListener("touchend", mouseUp);
+      // console.log(notesCardObj);
+      notesCardObj.saveToLocal(notesCardObj);
     }
   }
 

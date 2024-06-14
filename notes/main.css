@@ -38,6 +38,7 @@ body {
   background-image:
     linear-gradient(to right, var(--clr-whiteTint) 1px, transparent 1px),
     linear-gradient(to bottom, var(--clr-whiteTint) 1px, transparent 1px);
+    overflow: hidden;
 }
 
 
@@ -53,13 +54,26 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     /* background-color: var(--clr-whiteTint); */
     z-index: 1;
-}
+    overflow: auto;
 
+    /* scrollbar */
+    &::-webkit-scrollbar {
+        width: .5rem;
+        height: .5rem;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #ffffff66;
+        border-radius: .5rem;
+    }
+    &:focus {
+        outline: none;
+    }
+}
 /* ------- card  ------- */ 
 .card {
     --clr-card: var(--clr-white);
@@ -315,4 +329,11 @@ body {
 
 .popup__img {
     height: 1.25rem;
+}
+
+
+@media (width <= 768px) {
+    .card {
+        width: 24ch;
+    }
 }

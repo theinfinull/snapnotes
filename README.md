@@ -1,6 +1,6 @@
 # SnapNotes
 
-SnapNotes is one my sideprojects. Built with HTML, CSS, and JavaScript, SnapNotes provides an intuitive interface for creating, editing, and deleting notes, with data persistence via local storage.
+SnapNotes is one my sideprojects. Built with HTML, CSS, and JavaScript, SnapNotes provides an intuitive interface for creating, editing, and deleting notes, with data persistence via local storage. Just vannila js & no fancy frameworks!
 
 ## Features
 
